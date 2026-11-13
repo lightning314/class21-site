@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>有爱21 · 官网状态</title>
+<style>
+ body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#fff9f2;color:#16181f;
+      display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0}
+ .card{background:#fff;border-radius:24px;box-shadow:0 24px 60px -24px rgba(24,26,40,.35);
+       padding:40px 34px;max-width:540px;width:92vw;text-align:center}
+ .dot{display:inline-block;width:14px;height:14px;border-radius:50%;background:#c9ccd6;margin-right:8px}
+ .dot.ok{background:#22c55e;box-shadow:0 0 0 5px rgba(34,197,94,.18)}
+ .dot.bad{background:#ef4444;box-shadow:0 0 0 5px rgba(239,68,68,.18)}
+ a.btn{display:inline-block;margin-top:18px;padding:12px 26px;border-radius:999px;font-weight:800;
+       color:#fff;text-decoration:none;background:linear-gradient(120deg,#ff6b6b,#ff9a5b)}
+ code{background:#f1f2f6;padding:2px 8px;border-radius:6px;font-size:13px}
+ p{line-height:1.8}
+</style></head>
+<body>
+<div class="card">
+  <div style="font-size:46px">📡</div>
+  <h2 id="t"><span class="dot" id="d"></span>正在检测官网…</h2>
+  <p id="m" style="color:#6d7386"></p>
+  <a class="btn" id="go" href="#" style="display:none">直接进入官网 →</a>
+  <p style="font-size:13px;color:#8a90a0">本页地址永久不变，可放心收藏</p>
+</div>
+<script>
+var base = location.href.replace(/[^/]*$/, "");
+fetch(base + "tunnel.json?_=" + Date.now(), { cache: "no-store" })
+  .then(function (r) { return r.json(); })
+  .then(function (cfg) {
+    var u = (cfg.url || "").replace(/\/+$/, "");
+    var m = document.getElementById("m");
+    if (!u) { m.textContent = "尚未登记官网地址（管理员电脑可能未开机或未运行守护脚本）。"; return; }
+    m.innerHTML = "当前官网地址：<code>" + u + "</code><br>最后更新：" + (cfg.updated || "未知");
+    var ctl = new AbortController();
+    var timer = setTimeout(function () { ctl.abort(); }, 9000);
+    fetch(u + "/healthz", { signal: ctl.signal, cache: "no-store" })
+      .then(function (r) { return r.json(); })
+      .then(function () {
+        clearTimeout(timer);
+        document.getElementById("d").className = "dot ok";
+        document.getElementById("t").innerHTML = '<span class="dot ok"></span>官网在线';
+        var go = document.getElementById("go");
+        go.href = u; go.style.display = "inline-block";
+        m.innerHTML += "<br>状态：正常，点下面按钮直接进入。";
+      })
+      .catch(function () {
+        clearTimeout(timer);
+        document.getElementById("d").className = "dot bad";
+        document.getElementById("t").innerHTML = '<span class="dot bad"></span>连接超时';
+        m.innerHTML += "<br>可能是你所在网络（常见校园网）拦截了通道域名，或管理员电脑已关机。<br>试试用手机热点打开，通常立刻就能进。";
+      });
+  })
+  .catch(function () { document.getElementById("m").textContent = "读不到配置，请稍后再试。"; });
+</script>
+</body>
+</html>
