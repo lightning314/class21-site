@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>有爱21 · 班级官网</title>
+<style>
+  body { font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#fff9f2;color:#16181f;
+         display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0 }
+  .card { background:#fff;border-radius:24px;box-shadow:0 24px 60px -24px rgba(24,26,40,.35);
+          padding:44px 36px;max-width:560px;width:92vw;text-align:center }
+  h1 { font-size:32px;margin:6px 0 2px }
+  .big { font-size:54px }
+  #tip { color:#6d7386;margin:10px 0 22px }
+  .btn { display:inline-block;padding:13px 28px;border-radius:999px;font-size:17px;font-weight:800;
+         color:#fff;text-decoration:none;background:linear-gradient(120deg,#ff6b6b,#ff9a5b);
+         box-shadow:0 12px 28px -12px #ff6b6b }
+  .btn2 { display:inline-block;margin-top:12px;padding:10px 22px;border-radius:999px;font-size:14px;
+          font-weight:700;color:#16181f;text-decoration:none;background:#f1f2f6 }
+  #url { word-break:break-all;font-size:13px;color:#6d7386;margin-top:18px;background:#f7f8fb;
+         padding:8px 12px;border-radius:12px }
+  #hint { display:none;background:#fff3cd;border-left:5px solid #ffb347;text-align:left;
+          padding:14px 16px;border-radius:12px;margin-top:20px;font-size:14px;line-height:1.7 }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="big">❤️21</div>
+  <h1>有爱21 班级官网</h1>
+  <p id="tip">正在带你进入官网…</p>
+  <a id="go" class="btn" href="#">进入官网 →</a>
+  <div><a id="status" class="btn2" href="#" target="_blank">官网打不开？点我看状态</a></div>
+  <div id="url"></div>
+  <div id="hint">
+    <b>在这个页面停留超过 10 秒？</b><br>
+    你当前的网络（常见于校园网）暂时拦住了通道域名。<br>
+    ① 点上面「状态」按钮，从另一个入口进入；<br>
+    ② 或换个网络（例如手机热点）再打开本页。
+  </div>
+</div>
+<script>
+fetch("tunnel.json?_=" + Date.now(), { cache: "no-store" })
+  .then(function (r) { return r.json(); })
+  .then(function (d) {
+    var u = (d.url || "").replace(/\/+$/, "");
+    if (!u) throw new Error("empty");
+    document.getElementById("go").href = u;
+    document.getElementById("status").href = "status.html";
+    document.getElementById("url").textContent = u;
+    setTimeout(function () { document.getElementById("hint").style.display = "block"; }, 4000);
+    setTimeout(function () { location.href = u; }, 1200);
+  })
+  .catch(function () { document.getElementById("tip").textContent = "入口配置读取失败，请稍后再试"; });
+</script>
+</body>
+</html>
