@@ -1,0 +1,57 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>有爱21 · 离线快照</title><style>
+*{box-sizing:border-box}
+body{margin:0;background:#f6f7fb;color:#16181f;font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+header.top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.86);backdrop-filter:blur(14px);border-bottom:1px solid #eceef4}
+header.top .wrap{display:flex;align-items:center;gap:10px;height:56px}
+.brand{font-weight:800;font-size:17px;letter-spacing:.02em}
+.chip{font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:#a78bfa1a;color:#0ea5e9}
+.spacer{flex:1}
+.banner{margin:18px 0 0;background:linear-gradient(120deg,#fff7e6,#fffdf7);border:1px solid #ffe1ad;border-left:4px solid #ffb347;
+  border-radius:16px;padding:14px 16px;font-size:14px;line-height:1.75}
+.banner b{color:#8a5a00}
+.banner a{display:inline-block;margin-top:8px;margin-right:10px;padding:8px 16px;border-radius:999px;font-size:13px;font-weight:700;
+  text-decoration:none;background:#0ea5e9;color:#fff;box-shadow:0 10px 22px -12px #0ea5e9}
+.banner a.ghost{background:#fff;color:#16181f;border:1px solid #e6e8f0;box-shadow:none}
+.hero{padding:34px 4px 8px;text-align:center}
+.hero h1{margin:0;font-size:clamp(28px,6vw,46px);letter-spacing:.01em;
+  background:linear-gradient(120deg,#0ea5e9,#22d3ee);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.s{margin:10px 0 0;color:#5b6172;font-size:15px}
+.stats{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:20px 0 6px}
+.stat{background:#fff;border:1px solid #eceef4;border-radius:16px;padding:10px 16px;min-width:104px;box-shadow:0 10px 24px -20px rgba(20,24,40,.5)}
+.stat b{display:block;font-size:22px;letter-spacing:.02em}
+.stat span{font-size:12px;color:#7b8296}
+section.blk{background:#fff;border:1px solid #eceef4;border-radius:22px;padding:22px;margin:20px 0;box-shadow:0 18px 40px -32px rgba(20,24,40,.6)}
+section.blk h2{margin:0;font-size:20px;display:flex;align-items:center;gap:8px}
+section.blk p.sub{margin:6px 0 0;color:#767d90;font-size:14px}
+.rule{height:3px;width:46px;border-radius:3px;margin:12px 0 16px;background:linear-gradient(90deg,var(--c),transparent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:14px}
+.card{position:relative;border-radius:16px;overflow:hidden;background:#f2f4f9;border:1px solid #eceef4;cursor:zoom-in;aspect-ratio:4/3}
+.card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+.card:hover img{transform:scale(1.06)}
+.cap{position:absolute;left:0;right:0;bottom:0;padding:22px 10px 8px;font-size:12.5px;color:#fff;
+  background:linear-gradient(180deg,transparent,rgba(10,12,20,.78));word-break:break-all}
+.dl{position:absolute;right:8px;top:8px;font-size:12px;font-weight:700;text-decoration:none;padding:5px 10px;border-radius:999px;
+  background:rgba(16,18,28,.62);color:#fff;backdrop-filter:blur(6px)}
+.dl:hover{background:#0ea5e9}
+.note{background:#f8f9fc;border:1px solid #eceef4;border-radius:14px;padding:12px 14px;margin:10px 0;font-size:14.5px;line-height:1.7}
+.note h4{margin:0 0 4px;font-size:15px}
+.empty{color:#9aa1b3;font-size:14px;padding:16px;text-align:center;border:1px dashed #e2e5ee;border-radius:14px}
+.gcard{border:1px solid #eceef4;border-radius:16px;padding:14px;margin:12px 0;background:linear-gradient(180deg,#fbfcff,#f7f9ff)}
+.gcard .gh{display:flex;align-items:center;gap:8px;font-size:14px}
+.gcard .gh b{font-size:15px}
+.gcard .gh time{margin-left:auto;color:#9aa1b3;font-size:12px}
+.gcard .gc{margin:9px 0 0;font-size:15px;line-height:1.8;white-space:pre-wrap;word-break:break-word}
+.gimgs{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.gimgs img{width:96px;height:96px;object-fit:cover;border-radius:12px;cursor:zoom-in}
+.likes{margin-top:8px;font-size:12.5px;color:#8b92a6}
+.pin{font-size:11px;font-weight:700;color:#fff;background:#22d3ee;padding:2px 8px;border-radius:999px}
+footer{padding:26px 0 40px;color:#8b92a6;font-size:13px;text-align:center;line-height:1.9}
+#lb{position:fixed;inset:0;background:rgba(8,10,16,.94);display:none;z-index:60}
+#lb.on{display:block}
+#lb img{max-width:94vw;max-height:86vh;margin:4vh auto;display:block;border-radius:10px}
+#lb .lbc{text-align:center;color:#dfe3ee;font-size:14px;padding:0 16px 10px}
+#lb .close{position:fixed;top:14px;right:18px;color:#fff;font-size:30px;line-height:1;cursor:pointer;opacity:.8}
+@media (max-width:560px){.grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}section.blk{padding:16px;border-radius:18px}}
+</style></head><body><header class="top"><div class="wrap"><span class="brand">❤️有爱21</span><span class="chip">离线快照</span><span class="spacer"></span><a href="../" style="font-size:13px;font-weight:700;text-decoration:none">返回入口</a></div></header><div class="wrap"><div class="banner"><b>现在看到的是自动同步的离线快照</b><br>班级电脑没开机（或正在维护），实时官网暂时连不上。这里可以正常<b>看照片、下载原图、翻留言</b>；上传照片和写留言需要等开机后再来。<br><a href="../" rel="noopener">再试一次实时官网</a><div style="margin-top:8px;color:#a08a5e;font-size:12px">快照生成时间：2026-11-21 11:34</div></div><div class="hero"><h1>初一（21）班 · 有爱21</h1><p class="s">团结有爱，积极奋进，包容互助 · 这里有我们的照片、故事和说不完的话</p><div class="stats"><div class="stat"><b>42</b><span>班级人数</span></div><div class="stat"><b>6</b><span>照片</span></div><div class="stat"><b>2</b><span>留言</span></div></div></div><section class="blk"><h2><span>⛹️</span>初一的体育节</h2><p class="sub">体育节照片</p><div class="rule" style="--c:#ff8a8a"></div><div class="grid"><figure class="card" data-full="p/ph_mwft5iplcd6633dc.jpg" data-cap="宋 上传"><img loading="lazy" src="p/ph_mwft5iplcd6633dc.jpg" alt="宋 上传"><a class="dl" href="p/ph_mwft5iplcd6633dc.jpg" download="01-初一的体育节-ph_mwft5iplcd6633dc.jpg">下载原图</a><figcaption class="cap">宋 上传</figcaption></figure><figure class="card" data-full="p/ph_mwft35159926de94.jpg" data-cap="未命名照片"><img loading="lazy" src="p/ph_mwft35159926de94.jpg" alt="未命名照片"><a class="dl" href="p/ph_mwft35159926de94.jpg" download="02-初一的体育节-ph_mwft35159926de94.jpg">下载原图</a><figcaption class="cap">未命名照片</figcaption></figure><figure class="card" data-full="p/ph_mwft2dyk020245f9.jpg" data-cap="王骁阳 上传"><img loading="lazy" src="p/ph_mwft2dyk020245f9.jpg" alt="王骁阳 上传"><a class="dl" href="p/ph_mwft2dyk020245f9.jpg" download="03-初一的体育节-ph_mwft2dyk020245f9.jpg">下载原图</a><figcaption class="cap">王骁阳 上传</figcaption></figure><figure class="card" data-full="p/ph_mwft1o7z088a9936.jpg" data-cap="未命名照片"><img loading="lazy" src="p/ph_mwft1o7z088a9936.jpg" alt="未命名照片"><a class="dl" href="p/ph_mwft1o7z088a9936.jpg" download="04-初一的体育节-ph_mwft1o7z088a9936.jpg">下载原图</a><figcaption class="cap">未命名照片</figcaption></figure><figure class="card" data-full="p/ph_mwft19kh0ee5bfa7.jpg" data-cap="未命名照片"><img loading="lazy" src="p/ph_mwft19kh0ee5bfa7.jpg" alt="未命名照片"><a class="dl" href="p/ph_mwft19kh0ee5bfa7.jpg" download="05-初一的体育节-ph_mwft19kh0ee5bfa7.jpg">下载原图</a><figcaption class="cap">未命名照片</figcaption></figure><figure class="card" data-full="p/ph_mwft17otdc910d98.jpg" data-cap="未命名照片"><img loading="lazy" src="p/ph_mwft17otdc910d98.jpg" alt="未命名照片"><a class="dl" href="p/ph_mwft17otdc910d98.jpg" download="06-初一的体育节-ph_mwft17otdc910d98.jpg">下载原图</a><figcaption class="cap">未命名照片</figcaption></figure></div></section><section class="blk"><h2><span>💌</span>留言板</h2><div class="rule" style="--c:#22d3ee"></div><div class="gcard"><div class="gh"><span>🎉</span><b>匿名同学</b><span class="pin">置顶</span><time>2026-11-14</time></div><p class="gc">这就是21班的官网了</p><div class="likes">❤️ 11 次喜欢</div></div><div class="gcard"><div class="gh"><span>😍</span><b>灭建国</b><time>2026-11-21</time></div><p class="gc">好像https://northstar.cool啊</p><div class="likes">❤️ 2 次喜欢</div></div></section><footer>有爱21 · 本快照由班级电脑在开机时自动同步<br>快照时间 2026-11-21 11:34 · 留言与上传在实时官网恢复后照常可用</footer></div><div id="lb"><span class="close">×</span><img alt=""><div class="lbc"></div></div><script>(function(){var lb=document.getElementById('lb'),im=lb.querySelector('img'),cp=lb.querySelector('.lbc');document.addEventListener('click',function(e){var t=e.target;var c=t.closest?t.closest('[data-full]'):null;if(c){im.src=c.getAttribute('data-full');cp.textContent=c.getAttribute('data-cap')||'';lb.className='on';e.preventDefault();return;}if(t===lb||t.className==='close'){lb.className='';im.src='';}});document.addEventListener('keydown',function(e){if(e.key==='Escape'){lb.className='';}});})();</script></body></html>
