@@ -1,56 +1,64 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="utf-8">
+<html lang="zh-CN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>有爱21 · 班级官网</title>
 <style>
-  body { font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#fff9f2;color:#16181f;
-         display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0 }
-  .card { background:#fff;border-radius:24px;box-shadow:0 24px 60px -24px rgba(24,26,40,.35);
-          padding:44px 36px;max-width:560px;width:92vw;text-align:center }
-  h1 { font-size:32px;margin:6px 0 2px }
-  .big { font-size:54px }
-  #tip { color:#6d7386;margin:10px 0 22px }
-  .btn { display:inline-block;padding:13px 28px;border-radius:999px;font-size:17px;font-weight:800;
-         color:#fff;text-decoration:none;background:linear-gradient(120deg,#ff6b6b,#ff9a5b);
-         box-shadow:0 12px 28px -12px #ff6b6b }
-  .btn2 { display:inline-block;margin-top:12px;padding:10px 22px;border-radius:999px;font-size:14px;
-          font-weight:700;color:#16181f;text-decoration:none;background:#f1f2f6 }
-  #url { word-break:break-all;font-size:13px;color:#6d7386;margin-top:18px;background:#f7f8fb;
-         padding:8px 12px;border-radius:12px }
-  #hint { display:none;background:#fff3cd;border-left:5px solid #ffb347;text-align:left;
-          padding:14px 16px;border-radius:12px;margin-top:20px;font-size:14px;line-height:1.7 }
-</style>
-</head>
-<body>
+ body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#fff9f2;color:#16181f;display:flex;min-height:100vh;
+      align-items:center;justify-content:center;margin:0}
+ .card{background:#fff;border-radius:24px;box-shadow:0 24px 60px -24px rgba(24,26,40,.35);padding:40px 34px;max-width:580px;width:92vw;text-align:center}
+ h1{font-size:30px;margin:6px 0 2px}
+ .big{font-size:52px}
+ #tip{color:#6d7386;margin:10px 0 20px}
+ .btn{display:inline-block;padding:13px 26px;border-radius:999px;font-size:16px;font-weight:800;color:#fff;text-decoration:none;
+      background:linear-gradient(120deg,#ff6b6b,#ff9a5b);box-shadow:0 12px 28px -12px #ff6b6b;margin:6px 6px 0}
+ .btn2{display:inline-block;margin-top:12px;margin-right:8px;padding:10px 20px;border-radius:999px;font-size:14px;font-weight:700;
+       color:#16181f;text-decoration:none;background:#f1f2f6}
+ .btn3{display:inline-block;margin-top:12px;padding:10px 20px;border-radius:999px;font-size:14px;font-weight:700;color:#5b4a2a;
+       text-decoration:none;background:#fff3cd;border:1px solid #ffe1ad}
+ #url{word-break:break-all;font-size:12.5px;color:#6d7386;margin-top:16px;background:#f7f8fb;padding:8px 12px;border-radius:12px}
+ #alt{display:none;margin-top:14px}
+</style></head><body>
 <div class="card">
   <div class="big">❤️21</div>
   <h1>有爱21 班级官网</h1>
   <p id="tip">正在带你进入官网…</p>
   <a id="go" class="btn" href="#">进入官网 →</a>
-  <div><a id="status" class="btn2" href="#" target="_blank">官网打不开？点我看状态</a></div>
-  <div id="url"></div>
-  <div id="hint">
-    <b>在这个页面停留超过 10 秒？</b><br>
-    你当前的网络（常见于校园网）暂时拦住了通道域名。<br>
-    ① 点上面「状态」按钮，从另一个入口进入；<br>
-    ② 或换个网络（例如手机热点）再打开本页。
+  <div id="alt">
+    <a id="snap" class="btn3" href="snapshot/">📴 看离线快照（照片可看可下载）</a><br>
+    <a class="btn2" href="status.html" target="_blank">网络进不去？看状态与其它入口</a>
   </div>
+  <div id="url"></div>
 </div>
 <script>
+var SNAP = "snapshot/";
+function show(url, msg) {
+  document.getElementById("tip").textContent = msg;
+  document.getElementById("go").href = url || "#";
+  document.getElementById("url").textContent = url || "";
+  document.getElementById("alt").style.display = "block";
+}
+function probe(u) {
+  return Promise.race([
+    fetch(u + "/healthz?_=" + Date.now(), { cache: "no-store" }).then(function (r) { return !!r.ok; }).catch(function () { return false; }),
+    new Promise(function (r) { setTimeout(function () { r(false); }, 6000); })
+  ]);
+}
 fetch("tunnel.json?_=" + Date.now(), { cache: "no-store" })
   .then(function (r) { return r.json(); })
   .then(function (d) {
     var u = (d.url || "").replace(/\/+$/, "");
     if (!u) throw new Error("empty");
-    document.getElementById("go").href = u;
-    document.getElementById("status").href = "status.html";
-    document.getElementById("url").textContent = u;
-    setTimeout(function () { document.getElementById("hint").style.display = "block"; }, 4000);
-    setTimeout(function () { location.href = u; }, 1200);
+    var ageMin = 9999;
+    if (d.updated) { var t = new Date(d.updated.replace(" ", "T")); if (!isNaN(t)) ageMin = (Date.now() - t.getTime()) / 60000; }
+    probe(u).then(function (ok) {
+      if (ok) { show(u, "正在带你进入官网…"); setTimeout(function () { location.href = u; }, 900); return; }
+      if (ageMin > 90) { show(u, "班级电脑还没开机，正在打开离线快照…", true); setTimeout(function () { location.href = SNAP; }, 900); return; }
+      show(u, "实时通道暂时没有响应。你可以点“进入官网”再试，或先看离线快照。");
+    });
   })
-  .catch(function () { document.getElementById("tip").textContent = "入口配置读取失败，请稍后再试"; });
+  .catch(function () {
+    document.getElementById("tip").textContent = "入口配置读取失败，可能是网络问题，请稍后再试";
+    document.getElementById("alt").style.display = "block";
+  });
 </script>
-</body>
-</html>
+</body></html>
