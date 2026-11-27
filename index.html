@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
 <title>有爱21 · 班级官网</title>
 <style>
  body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#fff9f2;color:#16181f;display:flex;min-height:100vh;
@@ -8,7 +9,7 @@
  .card{background:#fff;border-radius:24px;box-shadow:0 24px 60px -24px rgba(24,26,40,.35);padding:40px 34px;max-width:580px;width:92vw;text-align:center}
  h1{font-size:30px;margin:6px 0 2px}
  .big{font-size:52px}
- #tip{color:#6d7386;margin:10px 0 20px}
+ #tip{color:#6d7386;margin:10px 0 20px;min-height:24px}
  .btn{display:inline-block;padding:13px 26px;border-radius:999px;font-size:16px;font-weight:800;color:#fff;text-decoration:none;
       background:linear-gradient(120deg,#ff6b6b,#ff9a5b);box-shadow:0 12px 28px -12px #ff6b6b;margin:6px 6px 0}
  .btn2{display:inline-block;margin-top:12px;margin-right:8px;padding:10px 20px;border-radius:999px;font-size:14px;font-weight:700;
@@ -16,49 +17,93 @@
  .btn3{display:inline-block;margin-top:12px;padding:10px 20px;border-radius:999px;font-size:14px;font-weight:700;color:#5b4a2a;
        text-decoration:none;background:#fff3cd;border:1px solid #ffe1ad}
  #url{word-break:break-all;font-size:12.5px;color:#6d7386;margin-top:16px;background:#f7f8fb;padding:8px 12px;border-radius:12px}
- #alt{display:none;margin-top:14px}
+ #upd{font-size:11.5px;color:#9aa0b0;margin-top:8px}
+ #alt{margin-top:14px}
 </style></head><body>
 <div class="card">
-  <div class="big">❤️21</div>
-  <h1>有爱21 班级官网</h1>
-  <p id="tip">正在带你进入官网…</p>
-  <a id="go" class="btn" href="#">进入官网 →</a>
-  <div id="alt">
-    <a id="snap" class="btn3" href="snapshot/">📴 看离线快照（照片可看可下载）</a><br>
-    <a class="btn2" href="status.html" target="_blank">网络进不去？看状态与其它入口</a>
-  </div>
-  <div id="url"></div>
+ <div class="big">❤️21</div>
+ <h1>有爱21 班级官网</h1>
+ <p id="tip">正在检测官网通道…</p>
+ <a id="go" class="btn" href="snapshot/">进入官网 →</a>
+ <div id="alt">
+   <a id="snap" class="btn3" href="snapshot/">📴 看离线快照（照片可看可下载）</a><br>
+   <a class="btn2" href="status.html" target="_blank">网络进不去？看状态与其它入口</a>
+ </div>
+ <div id="url"></div>
+ <div id="upd"></div>
 </div>
 <script>
+var LIVE = "https://utilities-layers-thanksgiving-approved.trycloudflare.com";
+var UPDATED = "2026-11-27T14:11:15.944Z";
 var SNAP = "snapshot/";
-function show(url, msg) {
-  document.getElementById("tip").textContent = msg;
-  document.getElementById("go").href = url || "#";
-  document.getElementById("url").textContent = url || "";
-  document.getElementById("alt").style.display = "block";
+if (!/^https:\/\/[a-z0-9.-]+/i.test(LIVE)) LIVE = "";
+function $(i) { return document.getElementById(i); }
+var go = $("go"), tip = $("tip"), urlBox = $("url"), alt = $("alt"), upd = $("upd");
+function ageMin() {
+  var t = Date.parse(UPDATED);
+  return isNaN(t) ? 9999 : (Date.now() - t) / 60000;
 }
-function probe(u) {
-  return Promise.race([
-    fetch(u + "/healthz?_=" + Date.now(), { cache: "no-store" }).then(function (r) { return !!r.ok; }).catch(function () { return false; }),
-    new Promise(function (r) { setTimeout(function () { r(false); }, 6000); })
-  ]);
+function fmt(s) {
+  var t = new Date(s);
+  return isNaN(t.getTime()) ? "" : t.toLocaleString();
 }
-fetch("tunnel.json?_=" + Date.now(), { cache: "no-store" })
-  .then(function (r) { return r.json(); })
-  .then(function (d) {
-    var u = (d.url || "").replace(/\/+$/, "");
-    if (!u) throw new Error("empty");
-    var ageMin = 9999;
-    if (d.updated) { var t = new Date(d.updated.replace(" ", "T")); if (!isNaN(t)) ageMin = (Date.now() - t.getTime()) / 60000; }
-    probe(u).then(function (ok) {
-      if (ok) { show(u, "正在带你进入官网…"); setTimeout(function () { location.href = u; }, 900); return; }
-      if (ageMin > 90) { show(u, "班级电脑还没开机，正在打开离线快照…", true); setTimeout(function () { location.href = SNAP; }, 900); return; }
-      show(u, "实时通道暂时没有响应。你可以点“进入官网”再试，或先看离线快照。");
-    });
-  })
-  .catch(function () {
-    document.getElementById("tip").textContent = "入口配置读取失败，可能是网络问题，请稍后再试";
-    document.getElementById("alt").style.display = "block";
+function jump(u, msg) {
+  tip.textContent = msg;
+  if (u) { go.href = u; setTimeout(function () { location.href = u; }, 900); }
+}
+function fallback() {
+  if (ageMin() > 90) return jump(SNAP, "班级电脑还没开机，正在打开离线快照…");
+  tip.textContent = LIVE
+    ? "实时通道暂时没有响应。点下面的“进入官网”再试一次，或先看离线快照。"
+    : "班级电脑还没启动官网，请先看离线快照。";
+}
+function probe(u, ms) {
+  return new Promise(function (res) {
+    var settled = false;
+    function ok(v) { if (!settled) { settled = true; res(!!v); } }
+    setTimeout(function () { ok(false); }, ms || 6000);
+    try {
+      if (!u) return ok(false);
+      fetch(u + "/healthz?_=" + Date.now(), { cache: "no-store" })
+        .then(function (r) { ok(r && r.ok); })
+        .catch(function () { ok(false); });
+    } catch (e) { ok(false); }
   });
+}
+function readTunnel() {
+  return new Promise(function (res) {
+    var settled = false;
+    function ok(v) { if (!settled) { settled = true; res(v || ""); } }
+    setTimeout(function () { ok(""); }, 4000);
+    try {
+      fetch("tunnel.json?_=" + Date.now(), { cache: "no-store" })
+        .then(function (r) { return r.json(); })
+        .then(function (d) { var u = String((d && d.url) || "").replace(/\/+$/, ""); ok(/^https:\/\/[a-z0-9.-]+/i.test(u) ? u : ""); })
+        .catch(function () { ok(""); });
+    } catch (e) { ok(""); }
+  });
+}
+go.href = LIVE || SNAP;
+go.textContent = LIVE ? "进入官网 →" : "打开离线快照 →";
+urlBox.textContent = LIVE || "实时通道：待班级电脑启动";
+upd.textContent = "入口更新于 " + fmt(UPDATED);
+alt.style.display = "block";
+if (!LIVE) { fallback(); } else {
+  var liveProbe = probe(LIVE, 6000);
+  var tunnel = readTunnel();
+  liveProbe.then(function (alive) {
+    if (alive) return jump(LIVE, "通道正常，正在进入官网…");
+    tunnel.then(function (nu) {
+      if (nu && nu !== LIVE) {
+        tip.textContent = "正在尝试新的通道…";
+        return probe(nu, 5000).then(function (ok2) {
+          if (ok2) { go.href = nu; urlBox.textContent = nu; return jump(nu, "已切换新通道，正在进入官网…"); }
+          fallback();
+        });
+      }
+      fallback();
+    });
+  });
+}
 </script>
 </body></html>
