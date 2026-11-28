@@ -29,7 +29,7 @@ l.onerror=function(){if(!done){done=true;clearTimeout(t);res(false);}};
 l.href=u+"/app.js?_="+Date.now();D.head.appendChild(l);});}
 fetch(base+"tunnel.json?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.json();})
 .then(function(cfg){var u=String(cfg.url||"").replace(/\/+$/,""),m=D.getElementById("m");
- m.innerHTML="当前通道：<code>"+(u||"尚未登记")+"</code><br>最后更新："+(cfg.updated||"未知");
+ m.innerHTML="当前通道：<code>"+(function(v){return String(v||"").replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];})})(u)+"</code><br>最后更新："+(function(v){try{return v?new Date(v).toLocaleString("zh-CN"):"未知";}catch(e){return v||"未知";}})(cfg.updated);
  if(!u){D.getElementById("d").className="dot bad";D.getElementById("t").innerHTML='<span class="dot bad"></span>班级电脑未开机';
   m.innerHTML+="<br>下面是自动同步的离线相册，照片照样能看能下载。";return;}
  probe(u,7000).then(function(ok){
@@ -40,4 +40,5 @@ fetch(base+"tunnel.json?_="+Date.now(),{cache:"no-store"}).then(function(r){retu
    m.innerHTML+="<br>班级电脑可能刚关机 / 隧道正在重连。也可以换手机热点再试，或先看离线相册。";}});
 }).catch(function(){D.getElementById("d").className="dot bad";D.getElementById("t").textContent="读不到配置";});
 })();
-</script></body></html>
+</script>
+<script src="gx-skin.js"></script></body></html>
