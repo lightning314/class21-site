@@ -44,3 +44,15 @@
   if (D.querySelector("section.blk")) add(DARK);
   var sc = D.createElement("script"); sc.src = dir + "galaxy.js"; D.body.appendChild(sc);
 })();
+(function () {
+  try {
+    if (!('serviceWorker' in navigator) || location.protocol !== 'https:') return;
+    var tag = document.querySelector('script[src*=' + String.fromCharCode(34) + 'gx-skin.js' + String.fromCharCode(34) + ']');
+    if (!tag || !tag.src) return;
+    var u = new URL(tag.src, location.href);
+    var root = u.pathname.slice(0, u.pathname.lastIndexOf('/') + 1);
+    var cur = String(navigator.serviceWorker.scriptURL || "");
+    if (cur.indexOf(root + "sw.js") === 0) return;
+    navigator.serviceWorker.register(root + "sw.js", { scope: root }).catch(function () {});
+  } catch (e) {}
+})();
