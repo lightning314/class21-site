@@ -63,7 +63,7 @@ button.btn.p{background:linear-gradient(120deg,#0ea5e9,#22d3ee)}
  function clear(){ while(acts.firstChild) acts.removeChild(acts.firstChild); }
  function wait_(t,s){ msg.textContent="正在连接班级电脑…"; dot.className="dot"; sub.textContent=s||"首次进入约需 3 秒"; }
  function enter(u){ msg.textContent="班级官网已就绪，正在进入…"; sub.textContent=u; setTimeout(function(){ location.replace(u); },260); }
- function out(j){ dot.className="dot off"; msg.textContent="班级电脑暂时没开机"; sub.textContent="实时官网跑在班级的电脑上，关机就打不开。下面这份自动同步的相册随时能看（照片可下载）。"; clear();
+ function out(j){ dot.className="dot off"; msg.textContent="官网暂时不在线"; sub.textContent="实时官网跑在班级电脑上：要电脑开着、且后台守护程序在运行才会在线。先看这份自动同步的相册，照片照样能下载。"; clear();
   acts.appendChild(btn("snapshot/","📷 看离线相册",true)); acts.appendChild(rbtn("🔄 再试一次"));
   upd.textContent = j && j.updated ? "通道最后在线 "+new Date(j.updated).toLocaleString("zh-CN") : "暂无通道记录"; }
  function probe(u,ms){ return new Promise(function(res){ var done=false,l=D.createElement("link");
