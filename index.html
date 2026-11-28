@@ -59,14 +59,21 @@ function fallback() {
 }
 function probe(u, ms) {
   return new Promise(function (res) {
-    var settled = false;
-    function ok(v) { if (!settled) { settled = true; res(!!v); } }
-    setTimeout(function () { ok(false); }, ms || 6000);
+    var settled = false, nodes = [], fails = 0;
+    function cleanup() { for (var i = 0; i < nodes.length; i++) { if (nodes[i].parentNode) nodes[i].parentNode.removeChild(nodes[i]); } }
+    function ok(v) { if (!settled) { settled = true; cleanup(); res(!!v); } }
+    function make(tag) {
+      var el = document.createElement(tag === "l" ? "link" : "script");
+      if (tag === "l") { el.rel = "stylesheet"; }
+      el.onload = function () { ok(true); };
+      el.onerror = function () { fails += 1; if (fails >= 2) { ok(false); } };
+      el.src = u + (tag === "l" ? "/style.css" : "/app.js") + "?_=" + Date.now();
+      nodes.push(el); document.head.appendChild(el);
+    }
+    setTimeout(function () { ok(false); }, Math.max(ms || 8000, 5000));
     try {
       if (!u) return ok(false);
-      fetch(u + "/healthz?_=" + Date.now(), { cache: "no-store" })
-        .then(function (r) { ok(r && r.ok); })
-        .catch(function () { ok(false); });
+      make("l"); make("s");
     } catch (e) { ok(false); }
   });
 }
