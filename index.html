@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="zh-CN"><head><meta charset="utf-8">
-<link rel="icon" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>有爱21 · 班级官网</title>
@@ -34,8 +33,8 @@
  <div id="upd"></div>
 </div>
 <script>
-var LIVE = "https://electrical-curious-swim-contest.trycloudflare.com";
-var UPDATED = "2026-11-27T23:35:17.706Z";
+var LIVE = "https://infants-instances-rim-locations.trycloudflare.com";
+var UPDATED = "2026-11-28T03:03:30.826Z";
 var SNAP = "snapshot/";
 if (!/^https:\/\/[a-z0-9.-]+/i.test(LIVE)) LIVE = "";
 function $(i) { return document.getElementById(i); }
@@ -60,22 +59,15 @@ function fallback() {
 }
 function probe(u, ms) {
   return new Promise(function (res) {
-    var done = false, el = document.createElement("link");
-    function f(v) { if (done) { return; } done = true; el.onload = null; el.onerror = null; if (el.parentNode) { el.parentNode.removeChild(el); } res(!!v); }
-    el.rel = "preload"; el.as = "script";
-    el.onload = function () { f(true); };
-    el.onerror = function () { second(); };
-    function second() {
-      var sc = document.createElement("script"), done2 = false;
-      function f2(v) { if (done2) { return; } done2 = true; sc.onload = null; sc.onerror = null; if (sc.parentNode) { sc.parentNode.removeChild(sc); } f(!!v); }
-      sc.onload = function () { f2(true); };
-      sc.onerror = function () { f2(false); };
-      sc.src = u + "/app.js?__=" + Date.now();
-      setTimeout(function () { f2(false); }, 4000);
-      document.head.appendChild(sc);
-    }
-    setTimeout(function () { if (!done) { f(false); } }, Math.max(ms || 8000, 5000));
-    if (!u) { f(false); } else { document.head.appendChild(el); el.href = u + "/app.js?_=" + Date.now(); }
+    var settled = false;
+    function ok(v) { if (!settled) { settled = true; res(!!v); } }
+    setTimeout(function () { ok(false); }, ms || 6000);
+    try {
+      if (!u) return ok(false);
+      fetch(u + "/healthz?_=" + Date.now(), { cache: "no-store" })
+        .then(function (r) { ok(r && r.ok); })
+        .catch(function () { ok(false); });
+    } catch (e) { ok(false); }
   });
 }
 function readTunnel() {
@@ -113,10 +105,5 @@ if (!LIVE) { fallback(); } else {
     });
   });
 }
-</script>
-<script>
-(function(){if('serviceWorker' in navigator&&location.protocol==='https:'){
-var s=location.pathname.slice(0,location.pathname.lastIndexOf('/')+1);
-try{navigator.serviceWorker.register(s+'sw.js',{scope:s});}catch(e){}}})();
 </script>
 </body></html>
