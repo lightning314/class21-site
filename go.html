@@ -21,7 +21,7 @@
     function f(v) { if (done) { return; } done = true; el.onload = null; el.onerror = null; if (el.parentNode) { el.parentNode.removeChild(el); } res(!!v); }
     el.rel = "preload"; el.as = "script";
     el.onload = function () { f(true); }; el.onerror = function () { f(false); };
-    setTimeout(function () { f(false); }, ms || 7000);
+    setTimeout(function () { f(false); }, typeof ms === "number" ? ms : 7000);
     document.head.appendChild(el); el.href = u + "/app.js?_=" + Date.now();
   });
 }
