@@ -1,58 +1,43 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>有爱21 · 官网状态</title>
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex"><title>有爱21 · 官网状态</title>
 <style>
- body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#fff9f2;color:#16181f;
-      display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0}
- .card{background:#fff;border-radius:24px;box-shadow:0 24px 60px -24px rgba(24,26,40,.35);
-       padding:40px 34px;max-width:540px;width:92vw;text-align:center}
- .dot{display:inline-block;width:14px;height:14px;border-radius:50%;background:#c9ccd6;margin-right:8px}
- .dot.ok{background:#22c55e;box-shadow:0 0 0 5px rgba(34,197,94,.18)}
- .dot.bad{background:#ef4444;box-shadow:0 0 0 5px rgba(239,68,68,.18)}
- a.btn{display:inline-block;margin-top:18px;padding:12px 26px;border-radius:999px;font-weight:800;
-       color:#fff;text-decoration:none;background:linear-gradient(120deg,#ff6b6b,#ff9a5b)}
- code{background:#f1f2f6;padding:2px 8px;border-radius:6px;font-size:13px}
- p{line-height:1.8}
-</style></head>
-<body>
-<div class="card">
-  <div style="font-size:46px">📡</div>
-  <h2 id="t"><span class="dot" id="d"></span>正在检测官网…</h2>
-  <p id="m" style="color:#6d7386"></p>
-  <a class="btn" id="go" href="#" style="display:none">直接进入官网 →</a>
-  <p style="font-size:13px;color:#8a90a0">本页地址永久不变，可放心收藏</p>
-</div>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:#eaf2ff;background-color:#03050e;
+background-image:radial-gradient(120% 82% at 78% 14%,rgba(99,102,241,.28),transparent 60%),radial-gradient(96% 72% at 10% 88%,rgba(14,165,233,.16),transparent 62%),linear-gradient(180deg,#050b20,#03060f 55%,#01020a)}
+.card{width:min(560px,94vw);padding:28px 24px;border-radius:24px;text-align:center;background:rgba(8,12,26,.66);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(16px);box-shadow:0 30px 80px -40px #000}
+h2{margin:8px 0 4px;font-size:22px;letter-spacing:1px}#m{margin:8px 0 0;font-size:13px;line-height:1.9;color:rgba(234,242,255,.60);word-break:break-all}
+code{background:rgba(255,255,255,.08);padding:2px 7px;border-radius:8px;font-size:12px}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;background:#22d3ee;margin-right:8px;vertical-align:1px}
+.dot.ok{background:#34d399}.dot.bad{background:#fbbf24}
+.btn{display:inline-block;margin:18px 6px 0;padding:11px 22px;border-radius:999px;font-size:14px;font-weight:700;text-decoration:none;border:1px solid rgba(255,255,255,.20);color:#eaf2ff}
+.btn:hover{border-color:#22d3ee}.btn.p{color:#04121e;background:linear-gradient(120deg,#0ea5e9,#22d3ee);border-color:transparent}
+.tip{margin-top:20px;font-size:12px;line-height:1.9;color:rgba(234,242,255,.38)}</style></head><body>
+<div class="card"><div style="font-size:42px">📡</div>
+<h2 id="t"><span class="dot" id="d"></span>正在检测官网…</h2><p id="m"></p>
+<a class="btn p" id="go" href="#" style="display:none">直接进入官网 →</a>
+<a class="btn" id="sn" href="snapshot/">📴 离线相册</a><a class="btn" href="go">🌌 星河入口</a>
+<p class="tip">本页地址永久不变。实时官网跑在班级电脑上，关机时仍可看相册与下载照片。<br>如果本页也打不开，多半是你所在网络拦了 github.io，换手机热点通常立刻能进。</p></div>
 <script>
-var base = location.href.replace(/[^/]*$/, "");
-fetch(base + "tunnel.json?_=" + Date.now(), { cache: "no-store" })
-  .then(function (r) { return r.json(); })
-  .then(function (cfg) {
-    var u = (cfg.url || "").replace(/\/+$/, "");
-    var m = document.getElementById("m");
-    if (!u) { m.textContent = "尚未登记官网地址（管理员电脑可能未开机或未运行守护脚本）。"; return; }
-    m.innerHTML = "当前官网地址：<code>" + u + "</code><br>最后更新：" + (cfg.updated || "未知");
-    var ctl = new AbortController();
-    var timer = setTimeout(function () { ctl.abort(); }, 9000);
-    fetch(u + "/healthz", { signal: ctl.signal, cache: "no-store" })
-      .then(function (r) { return r.json(); })
-      .then(function () {
-        clearTimeout(timer);
-        document.getElementById("d").className = "dot ok";
-        document.getElementById("t").innerHTML = '<span class="dot ok"></span>官网在线';
-        var go = document.getElementById("go");
-        go.href = u; go.style.display = "inline-block";
-        m.innerHTML += "<br>状态：正常，点下面按钮直接进入。";
-      })
-      .catch(function () {
-        clearTimeout(timer);
-        document.getElementById("d").className = "dot bad";
-        document.getElementById("t").innerHTML = '<span class="dot bad"></span>连接超时';
-        m.innerHTML += "<br>可能是你所在网络（常见校园网）拦截了通道域名，或管理员电脑已关机。<br>试试用手机热点打开，通常立刻就能进。";
-      });
-  })
-  .catch(function () { document.getElementById("m").textContent = "读不到配置，请稍后再试。"; });
-</script>
-</body>
-</html>
+(function(){
+var D=document,base=location.href.replace(/[^\/]*$/,"");
+function probe(u,ms){return new Promise(function(res){var done=false,l=D.createElement("link");
+l.rel="preload";l.as="script";var t=setTimeout(function(){if(!done){done=true;res(false);}},ms);
+l.onload=function(){if(!done){done=true;clearTimeout(t);res(true);}};
+l.onerror=function(){if(!done){done=true;clearTimeout(t);res(false);}};
+l.href=u+"/app.js?_="+Date.now();D.head.appendChild(l);});}
+fetch(base+"tunnel.json?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.json();})
+.then(function(cfg){var u=String(cfg.url||"").replace(/\/+$/,""),m=D.getElementById("m");
+ m.innerHTML="当前通道：<code>"+(u||"尚未登记")+"</code><br>最后更新："+(cfg.updated||"未知");
+ if(!u){D.getElementById("d").className="dot bad";D.getElementById("t").innerHTML='<span class="dot bad"></span>班级电脑未开机';
+  m.innerHTML+="<br>下面是自动同步的离线相册，照片照样能看能下载。";return;}
+ probe(u,7000).then(function(ok){
+  if(ok){D.getElementById("d").className="dot ok";D.getElementById("t").innerHTML='<span class="dot ok"></span>官网在线';
+   m.innerHTML+="<br>状态正常，点下面按钮直接进入。";var g=D.getElementById("go");g.href=u;g.style.display="inline-block";
+   setTimeout(function(){location.replace(u);},1200);
+  }else{D.getElementById("d").className="dot bad";D.getElementById("t").innerHTML='<span class="dot bad"></span>通道暂时连不上';
+   m.innerHTML+="<br>班级电脑可能刚关机 / 隧道正在重连。也可以换手机热点再试，或先看离线相册。";}});
+}).catch(function(){D.getElementById("d").className="dot bad";D.getElementById("t").textContent="读不到配置";});
+})();
+</script></body></html>
