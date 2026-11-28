@@ -55,11 +55,12 @@ h1{margin:10px 0 6px;font-size:clamp(40px,10vw,86px);font-weight:900;letter-spac
  var busy=false;
  if("serviceWorker" in navigator && location.protocol==="https:"){ try{ navigator.serviceWorker.register(SCOPE+"sw.js",{scope:SCOPE}); }catch(e){} }
  function btn(href,txt,primary){ var a=D.createElement("a"); a.href=href; a.className=primary?"btn p":"btn"; a.textContent=txt; return a; }
+ function rbtn(txt,primary){ var b=D.createElement("button"); b.type="button"; b.className="btn rr" + (primary?" p":""); b.textContent=txt; return b; }
  function clear(){ while(acts.firstChild) acts.removeChild(acts.firstChild); }
  function wait_(t,s){ msg.textContent="正在连接班级电脑…"; dot.className="dot"; sub.textContent=s||"首次进入约需 3 秒"; }
  function enter(u){ msg.textContent="班级官网已就绪，正在进入…"; sub.textContent=u; setTimeout(function(){ location.replace(u); },260); }
  function out(j){ dot.className="dot off"; msg.textContent="班级电脑暂时没开机"; sub.textContent="实时官网跑在班级的电脑上，关机就打不开。下面这份自动同步的相册随时能看（照片可下载）。"; clear();
-  acts.appendChild(btn("snapshot/","📷 看离线相册",true)); acts.appendChild(btn("javascript:location.reload()","🔄 再试一次"));
+  acts.appendChild(btn("snapshot/","📷 看离线相册",true)); acts.appendChild(rbtn("🔄 再试一次"));
   upd.textContent = j && j.updated ? "通道最后在线 "+new Date(j.updated).toLocaleString("zh-CN") : "暂无通道记录"; }
  function probe(u,ms){ return new Promise(function(res){ var done=false,l=D.createElement("link");
   l.rel="preload"; l.as="script";
@@ -74,6 +75,7 @@ h1{margin:10px 0 6px;font-size:clamp(40px,10vw,86px);font-weight:900;letter-spac
    wait_(); var ok=await probe(j.url,6500);
    if(ok){ enter(j.url); } else { out(j); }
   } finally { busy=false; } }
+ D.addEventListener("click",function(e){ var b=e.target.closest ? e.target.closest(".btn.rr") : null; if(!b) return; e.preventDefault(); if(b.disabled) return; b.disabled=true; b.textContent="🔄 连接中…"; setTimeout(function(){ b.disabled=false; b.textContent="🔄 再试一次"; },3500); check(); });
  wait_(); check();
  setInterval(function(){ if(!/没开机/.test(msg.textContent)) return; check(); },7000);
 })();
