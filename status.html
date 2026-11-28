@@ -31,14 +31,14 @@ l.href=u+"/app.js?_="+Date.now();D.head.appendChild(l);});}
 fetch(base+"tunnel.json?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.json();})
 .then(function(cfg){var u=String(cfg.url||"").replace(/\/+$/,""),m=D.getElementById("m");
  m.innerHTML="当前通道：<code>"+(function(v){return String(v||"").replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];})})(u)+"</code><br>最后更新："+(function(v){try{return v?new Date(v).toLocaleString("zh-CN"):"未知";}catch(e){return v||"未知";}})(cfg.updated);
- if(!u){D.getElementById("d").className="dot bad";D.getElementById("t").innerHTML='<span class="dot bad"></span>班级电脑未开机';
+ if(!u){D.getElementById("d").className="dot bad";D.getElementById("t").innerHTML='<span class="dot bad"></span>官网通道未连接';
   m.innerHTML+="<br>下面是自动同步的离线相册，照片照样能看能下载。";return;}
  probe(u,7000).then(function(ok){
   if(ok){D.getElementById("d").className="dot ok";D.getElementById("t").innerHTML='<span class="dot ok"></span>官网在线';
    m.innerHTML+="<br>状态正常，点下面按钮直接进入。";var g=D.getElementById("go");g.href=u;g.style.display="inline-block";
    setTimeout(function(){location.replace(u);},1200);
   }else{D.getElementById("d").className="dot bad";D.getElementById("t").innerHTML='<span class="dot bad"></span>通道暂时连不上';
-   m.innerHTML+="<br>班级电脑可能刚关机 / 隧道正在重连。也可以换手机热点再试，或先看离线相册。";}});
+   m.innerHTML+="<br>可能原因：电脑关机或睡眠、守护程序被关闭、网络中断。在班级电脑上双击「4-保活守护.bat」即可恢复；也可先看离线相册。";}});
 }).catch(function(){D.getElementById("d").className="dot bad";D.getElementById("t").textContent="读不到配置";});
 })();
 </script>
