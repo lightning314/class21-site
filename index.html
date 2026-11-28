@@ -113,4 +113,9 @@ if (!LIVE) { fallback(); } else {
   });
 }
 </script>
+<script>
+(function(){if('serviceWorker' in navigator&&location.protocol==='https:'){
+var s=location.pathname.slice(0,location.pathname.lastIndexOf('/')+1);
+try{navigator.serviceWorker.register(s+'sw.js',{scope:s});}catch(e){}}})();
+</script>
 </body></html>
