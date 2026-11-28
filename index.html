@@ -59,22 +59,22 @@ function fallback() {
 }
 function probe(u, ms) {
   return new Promise(function (res) {
-    var settled = false, nodes = [], fails = 0;
-    function cleanup() { for (var i = 0; i < nodes.length; i++) { if (nodes[i].parentNode) nodes[i].parentNode.removeChild(nodes[i]); } }
-    function ok(v) { if (!settled) { settled = true; cleanup(); res(!!v); } }
-    function make(tag) {
-      var el = document.createElement(tag === "l" ? "link" : "script");
-      if (tag === "l") { el.rel = "stylesheet"; }
-      el.onload = function () { ok(true); };
-      el.onerror = function () { fails += 1; if (fails >= 2) { ok(false); } };
-      el.src = u + (tag === "l" ? "/style.css" : "/app.js") + "?_=" + Date.now();
-      nodes.push(el); document.head.appendChild(el);
+    var done = false, el = document.createElement("link");
+    function f(v) { if (done) { return; } done = true; el.onload = null; el.onerror = null; if (el.parentNode) { el.parentNode.removeChild(el); } res(!!v); }
+    el.rel = "preload"; el.as = "script";
+    el.onload = function () { f(true); };
+    el.onerror = function () { second(); };
+    function second() {
+      var sc = document.createElement("script"), done2 = false;
+      function f2(v) { if (done2) { return; } done2 = true; sc.onload = null; sc.onerror = null; if (sc.parentNode) { sc.parentNode.removeChild(sc); } f(!!v); }
+      sc.onload = function () { f2(true); };
+      sc.onerror = function () { f2(false); };
+      sc.src = u + "/app.js?__=" + Date.now();
+      setTimeout(function () { f2(false); }, 4000);
+      document.head.appendChild(sc);
     }
-    setTimeout(function () { ok(false); }, Math.max(ms || 8000, 5000));
-    try {
-      if (!u) return ok(false);
-      make("l"); make("s");
-    } catch (e) { ok(false); }
+    setTimeout(function () { if (!done) { f(false); } }, Math.max(ms || 8000, 5000));
+    if (!u) { f(false); } else { document.head.appendChild(el); el.href = u + "/app.js?_=" + Date.now(); }
   });
 }
 function readTunnel() {
