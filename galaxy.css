@@ -1,0 +1,8 @@
+/* 有爱21 · 动态星河（深色模式下显示，浅色模式自动隐藏以保对比度） */
+#gx { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0; transition: opacity .8s ease; }
+html.gx-dark #gx { opacity: 1; }
+html.gx-dark body { background-color: #03050e !important; background-image: radial-gradient(120% 82% at 78% 14%, rgba(99,102,241,.30), transparent 60%), radial-gradient(96% 72% at 10% 88%, rgba(14,165,233,.18), transparent 62%), linear-gradient(180deg, #050b20 0%, #03060f 55%, #01020a 100%) !important; }
+html.gx-dark #bg .blob { mix-blend-mode: screen; opacity: .26; }
+html.gx-dark #grain { opacity: .07; }
+html.gx-dark .nav { background: rgba(6,10,24,.70); }
+@media (prefers-reduced-motion: reduce) { #gx { transition: none; } }
